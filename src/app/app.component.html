@@ -1,0 +1,24 @@
+<div class="h-screen flex justify-center bg-slate-100 py-10">
+  <div>
+    <h1 class="font-medium text-2xl text-center mb-3">
+      Deploy Angular To GitHub Pages
+    </h1>
+    <div class="bg-white w-[768px] rounded-lg shadow-md overflow-hidden">
+      <ul class="flex gap-2 bg-slate-50">
+        <li>
+          <a routerLink="/dashboard" routerLinkActive="bg-white text-lime-500 " class="font-medium p-3 block  hover:text-lime-500">
+            Dashboard
+          </a>
+        </li>
+        <li>
+          <a routerLink="/user"  routerLinkActive="bg-white text-lime-500 " class="font-medium p-3 block hover:text-lime-500">
+            User
+          </a>
+        </li>
+      </ul>
+      <div class="p-3">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
