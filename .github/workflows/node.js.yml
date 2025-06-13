@@ -25,5 +25,7 @@ jobs:
       run: npm install
     - name: Build Angular Project
       run: ng build --configuration=production --base-href "/"
+    - name: Verify Build Output
+      run: ls -l dist/ngstarter
     - name: Deploy using angular-cli-ghpages
       run: npx angular-cli-ghpages --dir=dist/ngstarter
