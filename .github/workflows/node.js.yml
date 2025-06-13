@@ -35,7 +35,13 @@ jobs:
       run: ls -l dist/ngstarter
 
     - name: Deploy to GitHub Pages
+      env:
+        GH_PAT: ${{ secrets.GH_PAT }}
       run: |
+        if [ -z "$GH_PAT" ]; then
+          echo "Error: GH_PAT secret is missing!"
+          exit 1
+        fi
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git config --global user.name "GitHub Actions"
         git checkout --orphan gh-pages
@@ -43,5 +49,4 @@ jobs:
         mv dist/ngstarter/* .
         git add .
         git commit -m "Deploy ke GitHub Pages via GitHub Actions"
-        git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/jsonerror/jsonerror.github.io.git gh-pages --force
-
+        git push https://x-access-token:${GH_PAT}@github.com/jsonerror/jsonerror.github.io.git gh-pages --force
