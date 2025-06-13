@@ -1,0 +1,52 @@
+name: Deploy Angular with GitHub Actions
+
+on:
+  push:
+    branches: [ "master" ]  # Sesuaikan dengan branch utama Anda
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.x]  # Gunakan versi Node.js terbaru yang sesuai
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install Angular CLI
+      run: npm install -g @angular/cli
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build Angular Project
+      run: ng build --configuration=production --base-href "/"
+
+    - name: Verify Build Output
+      run: ls -l dist/ngstarter
+
+    - name: Deploy to GitHub Pages
+      env:
+        GH_PAT: ${{ secrets.GH_PAT }}
+      run: |
+        if [ -z "$GH_PAT" ]; then
+          echo "Error: GH_PAT secret is missing!"
+          exit 1
+        fi
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "GitHub Actions"
+        git checkout --orphan gh-pages
+        git rm -rf .
+        mv dist/ngstarter/* .
+        git add .
+        git commit -m "Deploy ke GitHub Pages via GitHub Actions"
+        git push https://x-access-token:${GH_PAT}@github.com/jsonerror/jsonerror.github.io.git gh-pages --force
