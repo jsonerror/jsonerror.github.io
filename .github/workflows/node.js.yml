@@ -10,22 +10,37 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [22.x]  # Gunakan versi Node.js terbaru yang sesuai
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
     - name: Install Angular CLI
       run: npm install -g @angular/cli
+
     - name: Install Dependencies
       run: npm install
+
     - name: Build Angular Project
       run: ng build --configuration=production --base-href "/"
+
     - name: Verify Build Output
       run: ls -l dist/ngstarter
-    - name: Deploy using angular-cli-ghpages
-      run: npx angular-cli-ghpages --dir=dist/ngstarter/browser
+
+    - name: Deploy to GitHub Pages
+      run: |
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "GitHub Actions"
+        git checkout --orphan gh-pages
+        git rm -rf .
+        mv dist/ngstarter/* .
+        git add .
+        git commit -m "Deploy ke GitHub Pages via GitHub Actions"
+        git push origin gh-pages --force
